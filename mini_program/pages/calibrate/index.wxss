@@ -1,0 +1,547 @@
+/* pages/calibrate/index.wxss — 与备份布局完全对齐 */
+
+/* ================= 通用布局 ================= */
+page { height: auto !important; min-height: 100vh; background-color: #0d0d0d !important; }
+
+.container {
+  background: #0d0d0d;
+  color: #fff;
+  min-height: 100vh;
+  padding-bottom: calc(100rpx + env(safe-area-inset-bottom));
+}
+
+/* ================= 连接状态栏 ================= */
+.conn-bar { padding: 16rpx; border-radius: 8rpx; background: #141414; margin-bottom: 20rpx; text-align: center; }
+.conn-ok { color: #07c160; font-weight: bold; }
+.conn-off { color: #666; }
+
+/* ================= 未连接提示 ================= */
+.conn-warning {
+  background: rgba(250,81,81,0.1);
+  border: 1px solid rgba(250,81,81,0.3);
+  border-radius: 8rpx;
+  padding: 16rpx 20rpx;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+.conn-warning-text {
+  color: #fa5151;
+  font-size: 24rpx;
+}
+
+/* ================= 两个按钮并排 ================= */
+.action-buttons {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+.action-buttons .btn {
+  flex: 1;
+  margin-top: 0;
+  padding: 24rpx 0;
+  font-size: 28rpx;
+}
+.action-buttons-center {
+  justify-content: center;
+}
+.action-buttons-center .btn {
+  flex: 0 0 auto;
+  width: 400rpx;
+}
+
+/* ================= 用户卡片 ================= */
+.user-card { background: #161616; border-radius: 12rpx; padding: 24rpx; margin-bottom: 20rpx; display: flex; align-items: center; justify-content: space-between; border: 1px solid #252525; }
+.user-card.empty { justify-content: center; gap: 20rpx; flex-direction: column; }
+.user-name { font-size: 36rpx; font-weight: bold; display: block; color: #fff; }
+.user-meta { font-size: 26rpx; color: #888; display: block; margin-top: 8rpx; }
+.user-empty-text { color: #666; font-size: 28rpx; }
+
+/* ================= 状态区（备份核心布局） ================= */
+.status-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 20px;
+  gap: 8px;
+}
+
+/* ================= 提示框 ================= */
+.hint-box {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px 20px;
+  max-width: 320px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hint-phase { font-size: 12px; color: #60a5fa; }
+.hint-text { font-size: 14px; color: #bbb; line-height: 1.5; }
+.hint-text.red { color: #fa5151; font-weight: bold; }
+
+/* ================= 实时数值行 ================= */
+.live-values {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 8px 0;
+}
+.live-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+.live-label { font-size: 11px; color: #888; margin-bottom: 6px; white-space: nowrap; }
+.live-value {
+  font-size: 20px;
+  font-weight: bold;
+  font-family: monospace;
+  color: #07c160;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* ================= 阶段过渡区 ================= */
+.phase-transition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin-top: 10px;
+}
+.transition-icon { font-size: 36px; color: #07c160; margin-bottom: 8px; }
+.transition-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.transition-sub { font-size: 13px; color: #888; }
+
+/* ================= 结果汇总 ================= */
+.result-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 12px 0;
+}
+.result-item {
+  background: #252525;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.result-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+.result-value { font-size: 18px; font-weight: bold; color: #07c160; font-family: monospace; }
+
+/* ================= 验证结果 ================= */
+.validation-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.validation-result.pass { background: rgba(7,193,96,0.15); border: 1px solid #07c160; }
+.validation-result.fail { background: rgba(250,81,81,0.15); border: 1px solid #fa5151; }
+.val-icon { font-size: 20px; }
+.val-text { font-size: 14px; color: #fff; flex: 1; }
+
+/* FAIL原因提示 */
+.fail-reasons {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(250,81,81,0.08);
+  border-radius: 6px;
+}
+.fail-reason-text {
+  display: block;
+  font-size: 12px;
+  color: #fa5151;
+  line-height: 1.8;
+}
+
+/* ================= 成功框 ================= */
+.success-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0;
+  gap: 10px;
+}
+.success-icon { font-size: 60px; }
+.success-text { font-size: 18px; color: #07c160; font-weight: 600; }
+.success-sub { font-size: 13px; color: #888; }
+
+/* ================= 曲线匹配引导 ================= */
+.curve-match-guide {
+  width: 100%;
+  margin-top: 10px;
+}
+.curve-guide-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(96,165,250,0.08);
+  border: 1px solid rgba(96,165,250,0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+.guide-icon { font-size: 22px; }
+.guide-text { font-size: 13px; color: #888; flex: 1; line-height: 1.4; }
+.curve-guide-actions { display: flex; flex-direction: column; gap: 8px; }
+
+/* ================= 曲线面板 ================= */
+.curve-panel { width: 100%; margin-top: 10px; }
+.curve-panel-title { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+.curve-name { font-size: 14px; color: #fff; font-weight: 500; display: block; }
+.curve-meta { font-size: 12px; color: #888; display: block; margin-top: 4px; }
+
+/* ================= 结果操作按钮组 ================= */
+.result-actions { display: flex; gap: 10px; margin-top: 16px; }
+.result-actions .btn { flex: 1; margin-top: 0; }
+.fail-hint { color: #888; font-size: 14px; text-align: center; margin-top: 16px; }
+
+/* ================= 按钮系统 ================= */
+.btn {
+  width: 100%;
+  padding: 14px 0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  margin-top: 10px;
+  letter-spacing: 1px;
+  box-sizing: border-box;
+}
+.btn-primary { background: #07c160; color: #fff; }
+.btn-secondary { background: #333; color: #fff; }
+.btn:active { opacity: 0.8; }
+
+.btn-large { padding: 24rpx; font-size: 32rpx; border-radius: 12rpx; width: 80%; margin: 0 auto; }
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #07c160;
+  color: #07c160;
+}
+
+.btn-small { font-size: 24rpx; padding: 8rpx 24rpx; background: #07c160; color: #fff; border: none; line-height: 1.8; }
+
+.user-actions { display: flex; gap: 12rpx; align-items: center; }
+.btn-sm { font-size: 24rpx; padding: 6rpx 20rpx; line-height: 1.8; border-radius: 6rpx; }
+.btn-danger { background: transparent; color: #e74c3c; border: 1px solid #e74c3c; }
+
+.btn-max-start {
+  width: 200px !important;
+  padding: 18px 0 !important;
+  font-size: 20px !important;
+  border-radius: 12px !important;
+  margin-top: 10px !important;
+}
+
+/* ================= 流程介绍卡片 ================= */
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36rpx;
+  height: 36rpx;
+  background: #252525;
+  color: #aaa;
+  font-size: 20rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 2rpx;
+}
+
+
+
+/* ================= idle 操作行 ================= */
+.idle-action-row { display: flex; gap: 10px; margin-top: 10px; }
+.idle-action-row .btn { flex: 1; }
+
+/* ================= 弹窗系统 ================= */
+.modal-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-mask.show { display: flex; }
+
+.modal-panel {
+  background: #1a1a2e;
+  border: 1px solid #334;
+  border-radius: 20rpx;
+  padding: 40rpx 32rpx;
+  width: 85%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.5);
+}
+.modal-title { font-size: 34rpx; font-weight: bold; display: block; margin-bottom: 32rpx; text-align: center; color: #fff; }
+.modal-close { position: absolute; right: 16px; top: 16px; font-size: 18px; color: #555; padding: 4px 8px; }
+.modal-close:hover { color: #888; }
+
+/* ================= 表单（弹窗内） ================= */
+.form-row {
+  display: flex;
+  gap: 20rpx;
+}
+.form-col {
+  flex: 1;
+  min-width: 0;
+}
+.form-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24rpx;
+}
+.form-item > text {
+  font-size: 28rpx;
+  color: #aaa;
+  margin-bottom: 12rpx;
+  font-weight: 500;
+}
+.form-item input {
+  height: 80rpx;
+  background: #0d1525;
+  border: 1px solid #2a3a5a;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  color: #fff;
+  box-sizing: border-box;
+}
+.form-item radio-group {
+  display: flex;
+  gap: 20rpx;
+  padding: 16rpx 0;
+  flex-wrap: nowrap;
+}
+.form-item radio-group label {
+  font-size: 28rpx;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: 8rpx;
+}
+.form-btns {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 32rpx;
+  justify-content: center;
+}
+.form-btns button {
+  flex: 1;
+  height: 84rpx;
+  line-height: 84rpx;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 !important;
+  padding: 0;
+  box-sizing: border-box;
+}
+.form-btns .btn-primary {
+  background: #07c160;
+  color: #fff;
+  border: none;
+}
+.form-btns button[type="default"] {
+  background: #2a2a3a;
+  color: #ccc;
+  border: 1px solid #3a3a4a;
+}
+
+/* ================= 表单 ================= */
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-size: 26rpx; color: #aaa; margin-bottom: 6rpx; }
+.form-input {
+  width: 100%;
+  height: 80rpx;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 0 16rpx;
+  font-size: 28rpx;
+  color: #fff;
+  box-sizing: border-box;
+}
+.form-row { display: flex; gap: 12px; }
+.form-picker {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 0 16rpx;
+  font-size: 28rpx;
+  color: #888;
+  box-sizing: border-box;
+}
+.form-readonly { display: flex; align-items: center; background: #222; border-color: #444; }
+.auto-id-text { font-size: 28rpx; color: #4fc3f7; font-family: monospace; }
+.form-hint { display: block; font-size: 22rpx; color: #666; margin-top: 4rpx; }
+
+/* ================= 年龄分段 Chip ================= */
+.age-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 0; }
+.age-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  background: #1e1e1e;
+  border: 1px solid #3a3a3a;
+  color: #888;
+  user-select: none;
+}
+.age-chip.active { background: rgba(7,193,96,0.15); border-color: #07c160; color: #07c160; font-weight: 500; }
+
+/* ================= 曲线库列表项 ================= */
+.curve-item {
+  padding: 16px;
+  border-bottom: 1px solid #333;
+}
+.curve-item-selected {
+  border-color: #07c160;
+  background: rgba(7,193,96,0.06);
+}
+.curve-item-stale { border-color: #666; opacity: 0.7; }
+.curve-item-left { flex: 1; }
+.curve-item-id { font-size: 11px; color: #666; font-family: monospace; margin-bottom: 2px; }
+.curve-item-desc { font-size: 14px; color: #fff; font-weight: 500; margin-bottom: 6px; }
+.curve-item-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.curve-item-check { font-size: 22px; color: #07c160; font-weight: bold; margin-left: 10px; }
+
+.meta-tag {
+  font-size: 11px;
+  background: #1e1e1e;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: #888;
+}
+.curve-ok { color: #07c160; border-color: rgba(7,193,96,0.4); background: rgba(7,193,96,0.08); }
+.curve-stale { color: #fa5151; border-color: rgba(250,81,81,0.4); background: rgba(250,81,81,0.08); }
+
+/* ================= 说明卡片（与network页统一） ================= */
+.help-inline {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #2a2a2a;
+}
+.help-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+.help-icon {
+  font-size: 32rpx;
+}
+.help-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #ccc;
+}
+.help-steps {
+  padding: 4rpx 0;
+  margin-top: 8rpx;
+}
+.help-step {
+  display: flex;
+  align-items: flex-start;
+  padding: 14rpx 0;
+}
+.step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40rpx;
+  height: 40rpx;
+  background: #1a2a3a;
+  color: #60a5fa;
+  font-size: 24rpx;
+  font-weight: 700;
+  border-radius: 50%;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+.step-text {
+  font-size: 26rpx;
+  color: #999;
+  line-height: 40rpx;
+}
+.help-notice {
+  margin-top: 20rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #2a2a2a;
+}
+.help-notice-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #f87171;
+  margin-bottom: 10rpx;
+}
+.help-notice-text {
+  display: block;
+  font-size: 24rpx;
+  color: #888;
+  line-height: 1.6;
+  padding-left: 16rpx;
+  margin-bottom: 6rpx;
+}
+
+/* ================= 校准说明新样式 ================= */
+.help-section {
+  margin-top: 20rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #2a2a2a;
+}
+.help-section:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+.help-section-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 12rpx;
+}
+.help-section-text {
+  font-size: 24rpx;
+  color: #888;
+  line-height: 1.6;
+}
+.step-bold {
+  font-weight: 600;
+  color: #ccc;
+}
+.help-notice-list {
+  padding: 4rpx 0;
+}
+.help-notice-item {
+  display: block;
+  font-size: 24rpx;
+  color: #888;
+  line-height: 1.8;
+  margin-bottom: 8rpx;
+}
+.notice-label {
+  font-weight: 600;
+  color: #f87171;
+}

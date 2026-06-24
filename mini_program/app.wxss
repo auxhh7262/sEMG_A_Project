@@ -1,0 +1,5 @@
+/**app.wxss**/
+/* 全局容器 - 不再强制flex布局，由各页面自行控制 */
+.container {
+  box-sizing: border-box;
+} 

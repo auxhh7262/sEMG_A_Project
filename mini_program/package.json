@@ -1,0 +1,17 @@
+{
+  "name": "0421",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "miniprogram-automator": "^0.12.1",
+    "miniprogram-ci": "^2.1.31",
+    "serialport": "^13.0.0"
+  }
+}

@@ -1,0 +1,2 @@
+export declare const getVersion: (buffer: Buffer) => number;
+export declare const getVersionByFD: (fd: number) => number;

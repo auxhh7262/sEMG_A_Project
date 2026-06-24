@@ -1,0 +1,40 @@
+export declare const ConfigCommon: {
+    SPECIAL_START_BEGIN: number;
+    SPECIAL_START_END: number;
+    VERSION_BEGIN: number;
+    VERSION_END: number;
+    INFO_LENGTH_BEGIN: number;
+    INFO_LENGTH_END: number;
+};
+export declare const ConfigV0: {
+    FILE_LENGTH_BEGIN: number;
+    FILE_LENGTH_END: number;
+    SPECIAL_END_BEGIN: number;
+    SPECIAL_END_END: number;
+    FILE_COUNT_BEGIN: number;
+    FILE_COUNT_END: number;
+    FILF_INFO_BEGIN: number;
+    SPECIAL_START_BEGIN: number;
+    SPECIAL_START_END: number;
+    VERSION_BEGIN: number;
+    VERSION_END: number;
+    INFO_LENGTH_BEGIN: number;
+    INFO_LENGTH_END: number;
+};
+export declare const ConfigV10: {
+    INDEX_LENGTH_BEGIN: number;
+    INDEX_LENGTH_END: number;
+    FILE_LENGTH_BEGIN: number;
+    FILE_LENGTH_END: number;
+    SPECIAL_END_BEGIN: number;
+    SPECIAL_END_END: number;
+    FILE_COUNT_BEGIN: number;
+    FILE_COUNT_END: number;
+    FILF_INFO_BEGIN: number;
+    SPECIAL_START_BEGIN: number;
+    SPECIAL_START_END: number;
+    VERSION_BEGIN: number;
+    VERSION_END: number;
+    INFO_LENGTH_BEGIN: number;
+    INFO_LENGTH_END: number;
+};

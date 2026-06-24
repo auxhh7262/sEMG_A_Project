@@ -1,0 +1,23 @@
+export declare namespace PluginJSON {
+    interface IPluginJSON {
+        publicComponents: {
+            [props: string]: string;
+        };
+        pages: {
+            [page: string]: string;
+        };
+        usingComponents: {
+            [props: string]: string;
+        };
+        main: string;
+        themeLocation?: string;
+        darkmode?: boolean;
+        lazyCodeLoading?: 'requiredComponents';
+        workers?: string;
+    }
+    interface IPluginpageJSON {
+        usingComponents?: {
+            [key: string]: string;
+        };
+    }
+}

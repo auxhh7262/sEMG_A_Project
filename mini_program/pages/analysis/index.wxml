@@ -1,0 +1,131 @@
+<!-- pages/analysis/index.wxml - MDF decline curve analysis -->
+<view class="container">
+
+  <!-- 未连接设备警告 -->
+  <view class="conn-warning" wx:if="{{!isConnected}}">
+    <text class="conn-warning-text">⚠️ 未连接设备，请先在"网络配置"页连接</text>
+  </view>
+
+  <!-- 1. 算法状态 -->
+  <view class="algo-banner {{algorithm === '已校准' ? 'algo-personal' : 'algo-default'}}">
+    <text class="algo-label">{{algorithm === '已校准' ? '已校准模式' : algorithm === '无校准' ? '无校准模式' : algorithm}}</text>
+    <text class="algo-hint" wx:if="{{algorithm === '无校准'}}">请先完成校准以获得更准确的疲劳分析</text>
+  </view>
+
+  <!-- 2. 时间范围筛选（纯UI，不依赖连接） -->
+  <view class="filter-bar">
+    <scroll-view class="filter-scroll" scroll-x>
+      <view class="filter-chips">
+        <view wx:for="{{dateRange}}" wx:key="key"
+          class="filter-chip {{selectedRange === item.key ? 'active' : ''}}"
+          data-key="{{item.key}}" bindtap="onRangeChange">{{item.label}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="date-range-bar">
+    <text class="date-range-text">{{startDate}} ~ {{endDate}}</text>
+    <view class="btn-group">
+      <view class="query-btn" bindtap="onQuery"><text>查询</text></view>
+      <view class="refresh-btn" bindtap="onRefresh"><text>刷新</text></view>
+    </view>
+  </view>
+
+  <!-- ========== 需要连接才能显示的数据区 ========== -->
+  <block wx:if="{{isConnected}}">
+
+    <!-- 3. 加载 / 空数据 -->
+    <view class="loading-state" wx:if="{{isLoading}}">
+      <view class="spinner"></view>
+      <text class="loading-text">正在查询数据...</text>
+    </view>
+
+    <view class="empty-state" wx:elif="{{isEmpty}}">
+      <text class="empty-title">该时间范围内无数据</text>
+      <text class="empty-desc">{{errorMsg || '连接设备后选择时间范围查询'}}</text>
+    </view>
+
+    <!-- 4. 数据展示 -->
+    <block wx:elif="{{!isEmpty}}">
+
+      <!-- 4.1 统计摘要卡片 -->
+      <view class="summary-row">
+        <view class="summary-card">
+          <text class="summary-value">{{summary.avgMdf}}</text>
+          <text class="summary-label">平均 MDF</text>
+        </view>
+        <view class="summary-card">
+          <text class="summary-value">{{summary.avgFatigue}}%</text>
+          <text class="summary-label">平均疲劳度</text>
+        </view>
+        <view class="summary-card">
+          <text class="summary-value danger">{{summary.maxFatigue}}%</text>
+          <text class="summary-label">峰值疲劳度</text>
+        </view>
+        <view class="summary-card">
+          <text class="summary-value">{{totalRecords}}</text>
+          <text class="summary-label">数据条数</text>
+        </view>
+      </view>
+
+      <!-- 4.2 MDF 趋势图 -->
+      <view class="chart-section">
+        <view class="chart-header">
+          <text class="chart-title">MDF 趋势 (Hz)</text>
+        </view>
+        <canvas type="2d" id="mdfChart" class="mdf-canvas"></canvas>
+      </view>
+
+      <!-- 4.3 疲劳度趋势图 -->
+      <view class="chart-section">
+        <view class="chart-header">
+          <text class="chart-title">疲劳度趋势 (%)</text>
+        </view>
+        <canvas type="2d" id="fatigueChart" class="mdf-canvas"></canvas>
+      </view>
+
+      <!-- 4.4 操作栏 -->
+      <view class="action-bar">
+        <button class="btn btn-secondary" bindtap="onExportData">导出 CSV</button>
+      </view>
+
+      <!-- 4.5 分析说明 -->
+      <view class="help-inline">
+        <view class="help-header">
+          <text class="help-icon">📊</text>
+          <text class="help-title">分析说明</text>
+        </view>
+        <view class="help-steps">
+          <view class="help-step">
+            <text class="step-num">1</text>
+            <text class="step-text"><text class="step-bold">MDF下降曲线</text> — 中值频率随时间的变化趋势，肌肉疲劳时功率谱向低频偏移，MDF随之下降</text>
+          </view>
+          <view class="help-step">
+            <text class="step-num">2</text>
+            <text class="step-text"><text class="step-bold">疲劳度</text> — 基于MDF计算：1-(当前MDF/静息MDF)，0%=无疲劳，100%=完全疲劳</text>
+          </view>
+          <view class="help-step">
+            <text class="step-num">3</text>
+            <text class="step-text"><text class="step-bold">校准必要性</text> — 校准后的疲劳度计算更准确，建议每次锻炼前在"校准"页完成校准流程</text>
+          </view>
+          <view class="help-step">
+            <text class="step-num">4</text>
+            <text class="step-text"><text class="step-bold">时间筛选</text> — 支持按今天/最近7天/最近30天筛选数据，刷新按钮可重新加载最新数据</text>
+          </view>
+        </view>
+        <view class="help-notice">
+          <text class="help-notice-title">提示</text>
+          <text class="help-notice-text">导出CSV可获取原始监测数据，便于在Excel中进行进一步分析</text>
+          <text class="help-notice-text">MDF趋势陡峭下降时提示肌肉正在快速疲劳，建议适当休息</text>
+        </view>
+      </view>
+    </block>
+  </block>
+
+  <!-- ========== 未连接时的提示 ========== -->
+  <view class="empty-state" wx:if="{{!isConnected}}">
+    <text class="empty-title">连接设备后查看数据分析</text>
+    <text class="empty-desc">支持按时间范围查询监测数据、MDF趋势图、疲劳度分布</text>
+  </view>
+
+</view>

@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.MiniProgramBaseConf=exports.BaseConf=void 0;class BaseConf{constructor(s,e){this.proxyProject=s,this.root=e}async build(s){this.resetState(),await this.load(s)}}exports.BaseConf=BaseConf;class MiniProgramBaseConf extends BaseConf{}exports.MiniProgramBaseConf=MiniProgramBaseConf;

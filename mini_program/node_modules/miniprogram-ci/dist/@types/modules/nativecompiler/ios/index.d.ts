@@ -1,0 +1,57 @@
+import { Recorder } from '../../../utils/progressRecorder';
+import { IMiniApp } from '../../../types';
+import { IGetMiniAppBuilderOts } from '../../../utils/miniapp-builder';
+import II18NInfo = IMiniApp.II18NInfo;
+interface IProjectMaterialPathMap {
+    projectMiniappJson: string;
+    projectConfigJson: string;
+    appJson: string;
+    privacyJson: string;
+    privacyContentViewImage: string;
+    privacyCancelButtonImage: string;
+    privacyConfirmButtonImage: string;
+    icons: string[];
+    splashScreen: string;
+    splashScreenVideo: string;
+    p12: string;
+    profile: string;
+    tpnsProfile?: string;
+    i18nJson?: string;
+    resourcePath: string;
+}
+export declare class IOSUtils {
+    private root;
+    private userConfig;
+    private miniappDirPath?;
+    private devtoolsVersion?;
+    constructor(root: string, userConfig?: IMiniApp.IOSProjectParams, miniappDirPath?: string | undefined, devtoolsVersion?: string | undefined);
+    getProjectConfig(): IMiniApp.IOSProjectConfig;
+    getBundleId(appPath: string): string;
+    private tryInstallPod;
+    runLocal(args: IMiniApp.IIOSRunLocalArgs, recorder: Recorder): Promise<void>;
+    runCloud(args: IMiniApp.IIOSRunCloudArgs, recorder: Recorder): Promise<void>;
+    buildLocal(args: IMiniApp.IIOSBuildLocalArgs, recorder: Recorder): Promise<string>;
+    buildCloud(args: IMiniApp.IIOSBuildCloudArgs, recorder: Recorder): Promise<void>;
+    genProjectMaterialMap(projectPath: string, matrialDistPath: string, buildArgs: IMiniApp.IIOSBuildCloudGenMaterialArgs, recorder: Recorder): Promise<IProjectMaterialPathMap>;
+    codesignIOSApp(args: IMiniApp.CodesignIpaArgs, recorder: Recorder): Promise<void>;
+    packIOSCloudBuildMaterial(args: IMiniApp.IIOSBuildCloudGenMaterialArgs, recorder: Recorder): Promise<void>;
+    initUSBConnectionProcess(opts: IGetMiniAppBuilderOts, recorder: Recorder): Promise<void>;
+    private launchSimulator;
+    private runOnSimulatorCloud;
+    private runOnSimulatorLocal;
+    private runOnDeviceLocal;
+    private buildProjectApp;
+    private installAppOnSimulator;
+    private launchAppOnSimulator;
+    private buildProjectArchive;
+    private exportArchive;
+    private getTargetPaths;
+    private getBuildInfo;
+    private getPlatformName;
+    private getBuildProductDir;
+    private xcbeautifyAvailable;
+    private xcprettyAvailable;
+    buildPlugin(args: IMiniApp.IBuildPluginIOSFrameworkArgs, recorder: Recorder): Promise<void>;
+    writeI18NInfoFile(demoIpaPath: string, i18nInfo: II18NInfo, iosI18NField: Record<string, string>): Promise<void>;
+}
+export {};

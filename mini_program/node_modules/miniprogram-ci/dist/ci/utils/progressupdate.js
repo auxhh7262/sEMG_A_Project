@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.transProgressUpdate=void 0;const transProgressUpdate=s=>e=>{const r=e.status,t={id:e.id,message:e.message,status:{success:"done",error:"fail",doing:"doing",warn:"warn",info:"info"}[r]||"info"};s(t)};exports.transProgressUpdate=transProgressUpdate;

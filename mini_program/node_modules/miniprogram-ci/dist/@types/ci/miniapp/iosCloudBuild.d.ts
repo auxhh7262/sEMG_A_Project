@@ -1,0 +1,36 @@
+import { IMiniApp } from '../../types';
+import { IBuildIpaOptions } from '../build-ipa';
+import { IBuildArchiveOpts } from '../build-apk';
+declare class IOSCloudBuild {
+    private baseDir;
+    private materialDir;
+    private iOSDir;
+    private iPADir;
+    private res;
+    private md5;
+    private output;
+    private cloudBuildOptions?;
+    private buildSuccess;
+    private logAbPath;
+    private project;
+    private ciOpts;
+    constructor(ciOpts: IBuildIpaOptions);
+    build(options: IBuildArchiveOpts, cloudBuildOptions: IMiniApp.IIOSBuildCloudArgs, output?: string): Promise<string>;
+    private init;
+    private packAllFilesInDir;
+    private buildMaterial;
+    private buildCode;
+    private buildBase;
+    private buildResult;
+    private createTask;
+    private waitForRemoteReady;
+    private getTask;
+    private getTaskList;
+    private downloadBase;
+    private downloadIPA;
+    private getTaskResultUrl;
+    private getBundleId;
+    private getFinalIpaName;
+}
+export declare const getIOSCloudBuild: (ciOpts: IBuildIpaOptions) => IOSCloudBuild;
+export {};

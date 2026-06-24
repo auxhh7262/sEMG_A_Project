@@ -1,0 +1,40 @@
+declare const template: any;
+declare const generate: any;
+declare const hash: any;
+declare const transformSync: any;
+declare const traverse: any;
+declare const parse: any;
+declare const nodePath: any;
+declare const buildBindFunc: (func: any) => any;
+declare const buildWorkletFunc: (func: any) => any;
+declare const globals: Set<string>;
+declare const blacklistedFunctions: Set<string>;
+declare const possibleOptFunction: Set<string>;
+declare class ClosureGenerator {
+    constructor();
+    mergeAns(oldAns: any, newAns: any): any[];
+    findPrefixRec(path: any): any;
+    findPrefix(base: any, babelPath: any): any[];
+    addPath(base: any, babelPath: any): void;
+    generateNodeForBase(t: any, current: any, parent: any): any;
+    generate(t: any, variables: any, names: any): any;
+}
+declare function buildWorkletString(t: any, fun: any, closureVariables: any, name: any): any;
+declare function generateWorkletFactory(t: any, fun: any): any;
+declare function removeWorkletDirective(fun: any): undefined;
+declare function makeWorkletName(t: any, fun: any): any;
+declare function extractWorkletData(t: any, fun: any, fileName: any): {
+    variables: any[];
+    closure: Map<any, any>;
+    closureGenerator: ClosureGenerator;
+    funString: any;
+    workletHash: any;
+    locationFileName: any;
+};
+declare function makeWorklet(t: any, fun: any, fileName: any): any;
+declare function buildWorkletProperties(t: any, fun: any, fileName: any): any;
+declare function processWorkletFunction(t: any, fun: any, fileName: any): void;
+declare function processIfWorkletNode(t: any, fun: any, fileName: any): void;
+declare const FUNCTIONLESS_FLAG = 1;
+declare const STATEMENTLESS_FLAG = 2;
+declare function isPossibleOptimization(fun: any): number;

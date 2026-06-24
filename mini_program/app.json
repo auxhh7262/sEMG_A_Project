@@ -1,0 +1,40 @@
+{
+  "pages": [
+    "pages/network/index",
+    "pages/calibrate/index",
+    "pages/realtime/index",
+    "pages/analysis/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1a1a1a",
+    "navigationBarTitleText": "sEMG肌肉疲劳监测",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#888888",
+    "selectedColor": "#4fc3f7",
+    "backgroundColor": "#1a1a1a",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/calibrate/index",
+        "text": "肌电校准"
+      },
+  {
+        "pagePath": "pages/realtime/index",
+        "text": "实时监测"
+      },
+      {
+        "pagePath": "pages/analysis/index",
+        "text": "数据分析"
+      },
+      {
+        "pagePath": "pages/network/index",
+        "text": "网络配置"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

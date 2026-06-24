@@ -1,0 +1,9 @@
+#!/bin/bash
+APPICONSETNAME="$1"
+
+echo APPICONSETNAME: "$APPICONSETNAME"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+rm -Rf "$DIR/build"
+mkdir "$DIR/build"
+xcrun actool "$DIR/Assets.xcassets" --compile "$DIR/build" --platform iphoneos --minimum-deployment-target 10.0 --app-icon "$APPICONSETNAME" --target-device ipad --target-device iphone --output-partial-info-plist "$DIR/build/partial.plist"

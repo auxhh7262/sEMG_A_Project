@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const sass=()=>require("./sass"),less=()=>require("./less"),wxss=()=>require("./base/wxss"),minifywxml=()=>require("./minifywxml"),script=()=>require("./filetask/script"),plugins={less:less,sass:sass,wxss:wxss,script:script,minifywxml:minifywxml};exports.default={load:s=>s in plugins?plugins[s]().default:null};

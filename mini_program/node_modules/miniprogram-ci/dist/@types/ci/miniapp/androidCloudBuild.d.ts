@@ -1,0 +1,36 @@
+import { IBuildArchiveOpts, IAndroidCloudBuildInfo, IBuildApkOptions } from '../build-apk';
+declare class AndroidCloudBuild {
+    private baseDir;
+    private aab;
+    private infoPath;
+    private androidDir;
+    private res;
+    private md5;
+    private output;
+    private skipCheckRemote;
+    private packageName;
+    private project;
+    private ciOpts;
+    constructor(aab: boolean, ciOpts: IBuildApkOptions);
+    build(options: IBuildArchiveOpts, output: string, certificate: IAndroidCloudBuildInfo['certificateInfo']['androidCertificate']): Promise<string>;
+    private init;
+    private buildCode;
+    private checkBase;
+    private checkLocal;
+    private checkRemote;
+    private buildBase;
+    private buildResult;
+    private genZip;
+    private createTask;
+    private waitForRemoteReady;
+    private getTask;
+    private getTaskList;
+    private downloadBase;
+    private downloadRes;
+    private downloadPkg;
+    private getTaskResultUrl;
+    private getPackageName;
+}
+export declare const getAndroidApkBuild: (ciOpts: IBuildApkOptions) => AndroidCloudBuild;
+export declare const getAndroidAabBuild: (ciOpts: IBuildApkOptions) => AndroidCloudBuild;
+export {};

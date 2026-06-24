@@ -1,0 +1,24 @@
+interface ITranslateParams {
+    rootPath: string;
+    filePath: string;
+    code: string;
+    nameMapping: {
+        [props: string]: string;
+    };
+    check: boolean;
+    sourceMap: any;
+    sourceFileName: string;
+    miniProgramJSFiles: string[];
+    resolveAlias: (request: string) => string | undefined;
+}
+declare class TranslateResult {
+    translated: boolean;
+    errMsg: string;
+    debugs: any;
+    translatedContent: string;
+    fullPath: string;
+    translatedSourceMap: string;
+    constructor();
+}
+export declare const tryTranslateSingleFile: (options: ITranslateParams) => TranslateResult;
+export {};

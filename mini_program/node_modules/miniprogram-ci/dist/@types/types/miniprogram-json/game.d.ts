@@ -1,0 +1,38 @@
+import { BaseInfo } from './base';
+import { AppJSON } from './app';
+export declare namespace GameJSON {
+    type deviceOrientation = BaseInfo.DeviceOrientation;
+    interface subpackage {
+        root: string;
+        name?: string;
+        independent?: boolean;
+        plugins?: {
+            [alias: string]: IPlugin;
+        };
+    }
+    interface loadingImageInfo {
+        path: string;
+        progressBarColor: string;
+    }
+    interface IPlugin {
+        version: string;
+        provider: string;
+        path?: string;
+    }
+}
+export interface IGameJSON {
+    navigateToMiniProgramAppIdList: string[];
+    subpackages: GameJSON.subpackage[];
+    subPackages: GameJSON.subpackage[];
+    loadingImageInfo: GameJSON.loadingImageInfo;
+    deviceOrientation: GameJSON.deviceOrientation;
+    networkTimeout: AppJSON.INetworkTimeoutConfig;
+    openDataContext: string;
+    workers: string | {
+        path: string;
+        isSubpackage: boolean;
+    };
+    plugins: {
+        [alias: string]: GameJSON.IPlugin;
+    };
+}

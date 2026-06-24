@@ -1,0 +1,232 @@
+<!-- pages/calibrate/index.wxml -->
+<wxs module="fmt">
+function val(v, unit) { if (v === null || v === undefined || v === '') return '-'; return v; }
+module.exports.val = val;
+</wxs>
+<view class="container">
+
+  <!-- 未连接设备警告（所有阶段统一显示） -->
+  <view class="conn-warning" wx:if="{{!connected}}">
+    <text class="conn-warning-text">⚠️ 未连接设备，请先在"网络配置"页连接</text>
+  </view>
+
+  <!-- ===================== IDLE 主界面 ===================== -->
+  <block wx:if="{{phase === 'idle'}}">
+
+    <!-- 用户Profile卡片 -->
+    <view class="user-card" wx:if="{{currentUser}}">
+      <view class="user-info">
+        <text class="user-name">{{currentUser.name}}</text>
+        <text class="user-meta">{{userMetaStr}}</text>
+      </view>
+    </view>
+
+    <!-- 按钮：个人信息 + 开始校准 -->
+    <view class="action-buttons">
+      <button class="btn btn-outline" bindtap="onOpenUserForm">
+        {{currentUser ? '修改个人信息' : '录入个人信息'}}
+      </button>
+      <button class="btn btn-outline" bindtap="{{currentUser ? 'startCalibration' : 'onFirstUseCalibrate'}}">
+        开始校准
+      </button>
+    </view>
+
+
+
+    <!-- 校准说明 -->
+    <view class="help-inline">
+      <view class="help-header">
+        <text class="help-icon">💡</text>
+        <text class="help-title">肌电传感器校准说明</text>
+      </view>
+      <view class="help-section">
+        <text class="help-section-title">校准目的</text>
+        <text class="help-section-text">消除设备与个体差异，确保测量精准稳定；建立个人用力基准，为训练与疲劳评估提供可靠依据。</text>
+      </view>
+      <view class="help-section">
+        <text class="help-section-title">校准操作步骤</text>
+        <view class="help-steps">
+          <view class="help-step">
+            <text class="step-num">1</text>
+            <text class="step-text"><text class="step-bold">静息态采集（10秒）</text>
+              手臂自然下垂，肌肉完全放松</text>
+          </view>
+          <view class="help-step">
+            <text class="step-num">2</text>
+            <text class="step-text"><text class="step-bold">最大收缩采集（15秒）</text>
+              全力收缩目标肌肉，保持不动</text>
+          </view>
+        </view>
+      </view>
+      <view class="help-section">
+        <text class="help-section-title">佩戴注意事项</text>
+        <view class="help-notice-list">
+          <text class="help-notice-item"><text class="notice-label">位置：</text>佩戴在手环标定的位置，对准目标肌肉</text>
+          <text class="help-notice-item"><text class="notice-label">松紧：</text>贴合皮肤，避免松动或滑动</text>
+          <text class="help-notice-item"><text class="notice-label">姿态：</text>采集时保持手臂静止，不要甩动</text>
+        </view>
+      </view>
+    </view>
+
+  </block>
+
+  <!-- ===================== RELAX阶段 ===================== -->
+  <block wx:if="{{phase === 'relax'}}">
+    <view class="status-area">
+      <view class="hint-box">
+        <text class="hint-phase">静息态采集（10秒）</text>
+        <text class="hint-text">请保持放松，不要用力</text>
+      </view>
+      <view class="live-values">
+        <view class="live-item">
+          <text class="live-label">RMS(mV)</text>
+          <text class="live-value">{{fmt.val(liveRelaxRms, 'mV')}}</text>
+        </view>
+        <view class="live-item">
+          <text class="live-label">MDF(Hz)</text>
+          <text class="live-value">{{fmt.val(liveRelaxMdf, 'Hz')}}</text>
+        </view>
+      </view>
+      <text class="status-text">{{statusText}}</text>
+    </view>
+  </block>
+
+  <!-- ===================== ACTIVE等待阶段 ===================== -->
+  <block wx:if="{{phase === 'active_ready'}}">
+    <view class="status-area">
+      <view class="phase-transition">
+        <text class="transition-icon">✓</text>
+        <text class="transition-title">第一阶段完成</text>
+        <text class="transition-sub">静息态数据采集完毕，请准备进入第二阶段</text>
+      </view>
+      <button class="btn btn-primary btn-max-start" bindtap="onStartActive">开始第二阶段</button>
+      <text class="status-text">{{statusText}}</text>
+    </view>
+  </block>
+
+  <!-- ===================== ACTIVE收缩阶段 ===================== -->
+  <block wx:if="{{phase === 'active_contract'}}">
+    <view class="status-area">
+      <view class="hint-box">
+        <text class="hint-phase">最大收缩（15秒）</text>
+        <text class="hint-text">请握紧拳头至最大力，并保持</text>
+        <text class="hint-text red">持续握紧拳头至最大力！</text>
+      </view>
+      <view class="live-values">
+        <view class="live-item">
+          <text class="live-label">RMS(mV)</text>
+          <text class="live-value">{{fmt.val(liveActiveRms, 'mV')}}</text>
+        </view>
+        <view class="live-item">
+          <text class="live-label">MDF(Hz)</text>
+          <text class="live-value">{{fmt.val(liveActiveMdf, 'Hz')}}</text>
+        </view>
+      </view>
+      <text class="status-text">{{statusText}}</text>
+    </view>
+  </block>
+
+  <!-- ===================== 结果展示（合并：PASS/FAIL + 保存后）===================== -->
+  <block wx:if="{{phase === 'result'}}">
+    <view class="status-area">
+      <text class="phase-title">校准结果</text>
+      <view class="result-summary">
+        <view class="result-item">
+          <text class="result-label">静息态 RMS</text>
+          <text class="result-value">{{fmt.val(relaxRms, 'mV')}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">最大收缩 RMS</text>
+          <text class="result-value">{{fmt.val(activeRms, 'mV')}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">静息态 MDF</text>
+          <text class="result-value">{{fmt.val(relaxMdf, 'Hz')}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">峰值 MDF</text>
+          <text class="result-value">{{fmt.val(activeMdf, 'Hz')}}</text>
+        </view>
+        <view class="result-item">
+          <text class="result-label">末尾 MDF</text>
+          <text class="result-value">{{fmt.val(endMdf, 'Hz')}}</text>
+        </view>
+      </view>
+
+      <view class="validation-result {{validation && validation.ok ? 'pass' : 'fail'}}">
+        <text class="val-icon">{{validation && validation.ok ? '✓' : '✗'}}</text>
+        <text class="val-text">{{validation && validation.ok ? '校准通过' : '校准未通过'}}</text>
+      </view>
+
+      <!-- FAIL原因提示 -->
+      <view class="fail-reasons" wx:if="{{validation && !validation.ok}}">
+        <text wx:if="{{!validation.rms_ok}}" class="fail-reason-text">- RMS未达标准(需最大收缩>2倍静息值且>=0.5mV)</text>
+        <text wx:if="{{!validation.mdf_ok}}" class="fail-reason-text">- MDF超出范围(需10-250Hz)</text>
+      </view>
+
+      <!-- PASS：显示保存按钮 -->
+      <view class="result-actions" wx:if="{{validation && validation.ok && !saved}}">
+        <button class="btn btn-primary" bindtap="onConfirmResult">保存</button>
+      </view>
+
+      <!-- PASS + 已保存：显示保存成功 + 进入监测 -->
+      <view class="result-actions" wx:if="{{validation && validation.ok && saved}}">
+        <view class="success-box" style="margin-bottom: 16px;">
+          <text class="success-icon">✓</text>
+          <text class="success-text">校准数据已保存</text>
+        </view>
+        <button class="btn btn-primary" bindtap="onGoToMonitor">进入监测</button>
+      </view>
+
+      <!-- FAIL：显示重新校准按钮 -->
+      <view class="result-actions" wx:if="{{validation && !validation.ok}}">
+        <button class="btn btn-outline" bindtap="onRetryCalib">重新校准</button>
+      </view>
+    </view>
+  </block>
+
+
+
+  <!-- ===================== 用户录入弹窗 ===================== -->
+  <view class="modal-mask" wx:if="{{showUserForm}}" bindtap="onCloseUserForm">
+    <view class="modal-panel" catchtap="onStopPropagation">
+
+      <text class="modal-title">录入用户信息</text>
+
+      <form bindsubmit="onUserFormSubmit">
+        <view class="form-row">
+          <view class="form-item form-col">
+            <text>姓名</text>
+            <input name="name" value="{{formData.name}}" placeholder="请输入姓名" maxlength="20"/>
+          </view>
+          <view class="form-item form-col">
+            <text>年龄</text>
+            <input name="age" type="number" value="{{formData.age}}" placeholder="年龄" min="1" max="120"/>
+          </view>
+        </view>
+        <view class="form-row">
+          <view class="form-item form-col">
+            <text>性别</text>
+            <radio-group name="gender">
+              <label><radio value="1" checked="{{formData.gender==='1'}}"/> 男</label>
+              <label><radio value="2" checked="{{formData.gender==='2'}}"/> 女</label>
+            </radio-group>
+          </view>
+          <view class="form-item form-col">
+            <text>佩戴</text>
+            <radio-group name="handedness">
+              <label><radio value="1" checked="{{formData.handedness==='1'}}"/> 左手腕</label>
+              <label><radio value="2" checked="{{formData.handedness==='2'}}"/> 右手腕</label>
+            </radio-group>
+          </view>
+        </view>
+        <view class="form-btns">
+          <button plain form-type="submit" class="btn-primary">确认</button>
+          <button plain type="default" bindtap="onCloseUserForm">取消</button>
+        </view>
+      </form>
+
+    </view>
+  </view>
+
+</view>

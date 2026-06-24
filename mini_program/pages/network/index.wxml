@@ -1,0 +1,131 @@
+<!-- pages/index/index.wxml - 网络配置页 -->
+<view class="container">
+
+  <!-- ========== WiFi 配网区域 ========== -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-icon">📡</text>
+      <text class="section-title">WiFi 配网</text>
+    </view>
+
+    <!-- WiFi 凭证表单 -->
+    <view class="form-area">
+      <view class="form-field">
+        <text class="field-label">WiFi 名称</text>
+        <input
+          class="field-input {{!bleConnected ? 'input-locked' : ''}}"
+          type="text"
+          placeholder="路由器名称"
+          value="{{ssid}}"
+          bindinput="onSsidInput"
+        />
+      </view>
+
+      <view class="form-field">
+        <text class="field-label">WiFi 密码</text>
+        <view class="input-with-icon">
+          <input
+            class="field-input-icon {{!bleConnected ? 'input-locked' : ''}}"
+            type="{{showPassword ? 'text' : 'password'}}"
+            placeholder="WiFi 密码"
+            value="{{password}}"
+            bindinput="onPasswordInput"
+          />
+          <view class="pwd-toggle" catchtap="onTogglePassword">
+            <text class="pwd-icon">{{showPassword ? '隐藏' : '显示'}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 设备信息 -->
+      <view class="device-info" wx:if="{{bleConnected}}">
+        <view class="info-row">
+          <text class="info-label">BLE设备</text>
+          <text class="info-value">{{deviceName}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">BLE信号</text>
+          <text class="info-value">{{deviceRssi !== null ? deviceRssi + ' dBm' : '--'}}</text>
+        </view>
+      </view>
+
+      <!-- 设备IP（配网成功后显示，位于按钮上方） -->
+      <view class="ip-card" wx:if="{{deviceIp}}">
+        <view class="ip-left">
+          <text class="ip-icon">✅</text>
+          <view class="ip-info">
+            <text class="ip-label">sEMG手环已连接：{{deviceSsid || '获取中...'}}</text>
+            <text class="ip-value">IP：{{deviceIp}}</text>
+          </view>
+        </view>
+        <view class="ip-right">
+          <view class="btn-ip-refresh" bindtap="onRefreshIp">刷新</view>
+        </view>
+      </view>
+
+      <!-- 手机网络信息 -->
+      <view class="phone-net-card" wx:if="{{phoneWifiSsid}}">
+        <view class="ip-left">
+          <text class="ip-icon">📱</text>
+          <view class="ip-info">
+            <text class="ip-label" wx:if="{{phoneWifiSsid}}">手机已连接：{{phoneWifiSsid}}</text>
+            <text class="ip-label" wx:else>手机WiFi：获取中...</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 三个按钮一排 -->
+      <view class="btn-group-three">
+        <view
+          class="btn-item btn-scan {{isScanning || bleConnected ? 'btn-disabled' : ''}}"
+          bindtap="onStartScan"
+        >
+          {{isScanning ? '扫描中...' : (bleConnected ? 'BLE已连接' : '扫描BLE设备')}}
+        </view>
+        <view
+          class="btn-item btn-accent {{!canSend ? 'btn-disabled' : ''}}"
+          bindtap="onSendCredentials"
+        >
+          配置WiFi网络
+        </view>
+        <view
+          class="btn-item btn-reset {{!bleConnected && !deviceIp ? 'btn-disabled' : ''}}"
+          bindtap="onReset"
+        >
+          重置WiFi网络
+        </view>
+      </view>
+    </view>
+
+    <!-- 配网说明 -->
+    <view class="help-inline">
+      <view class="help-header">
+        <text class="help-icon">💡</text>
+        <text class="help-title">配网说明</text>
+      </view>
+      <view class="help-steps">
+        <view class="help-step">
+          <text class="step-num">1</text>
+          <text class="step-text">点击扫描BLE设备，搜索sEMG手环（需要开启手机蓝牙）</text>
+        </view>
+        <view class="help-step">
+          <text class="step-num">2</text>
+          <text class="step-text">sEMG手环通过BLE连接成功后，设备行显示sEMG手环名称及BLE信号强度</text>
+        </view>
+        <view class="help-step">
+          <text class="step-num">3</text>
+          <text class="step-text">输入WiFi名称和密码，点击配置WiFi网络，通过BLE将WiFi凭证发送给sEMG手环（仅支持2.4GHz网络）</text>
+        </view>
+        <view class="help-step">
+          <text class="step-num">4</text>
+          <text class="step-text">配置WiFi网络成功后，sEMG手环自动获取IP地址并显示</text>
+        </view>
+        <view class="help-step">
+          <text class="step-num">5</text>
+          <text class="step-text">点击重置WiFi网络可以清除小程序中缓存的WiFi信息，清除后需要重新配置网络</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>

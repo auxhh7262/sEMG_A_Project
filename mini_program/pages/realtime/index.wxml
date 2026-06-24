@@ -1,0 +1,110 @@
+<!-- pages/realtime/index.wxml -->
+<view class="container">
+
+<!-- 未连接设备警告 -->
+<view class="conn-warning" wx:if="{{!connected}}">
+  <text class="conn-warning-text">⚠️ 未连接设备，请先在"网络配置"页连接</text>
+</view>
+
+<!-- ===== 算法标识 ===== -->
+<view class="algorithm-tag" wx:if="{{connected && algorithm && algorithm !== '--'}}">
+  <text class="algo-label">算法</text>
+  <text class="algo-value">{{algorithm}}</text>
+</view>
+
+<!-- ===== 无校准提示 ===== -->
+<view class="conn-warning" wx:if="{{connected && algorithm === '无校准'}}">
+  <text class="conn-warning-text">⚠️ 无校准数据，仅显示原始RMS/MDF，疲劳值仅供参考</text>
+  <text class="conn-warning-text" style="margin-top:8rpx;">请前往「肌电校准」完成校准以获得个性化疲劳分析</text>
+</view>
+
+<!-- ===== 数据区（表头+指标说明始终可见） ===== -->
+<view class="data-section">
+  <!-- 标题行：列名 + 单位（双行布局） -->
+  <view class="dt-header">
+    <view class="th-col th-col-time">
+      <text class="th-name th-name-time">时间</text>
+      <text class="th-unit th-unit-time">(hh:mm:ss.mmm)</text>
+    </view>
+    <view class="th-col th-col-rms">
+      <text class="th-name th-name-rms">RMS</text>
+      <text class="th-unit th-unit-rms">(mV)</text>
+    </view>
+    <view class="th-col th-col-act">
+      <text class="th-name th-name-act">收缩力度</text>
+      <text class="th-unit th-unit-act">(%)</text>
+    </view>
+    <view class="th-col th-col-mdf">
+      <text class="th-name th-name-mdf">MDF</text>
+      <text class="th-unit th-unit-mdf">(Hz)</text>
+    </view>
+    <view class="th-col th-col-fat">
+      <text class="th-name th-name-fat">疲劳度</text>
+      <text class="th-unit th-unit-fat">(%)</text>
+    </view>
+    <view class="th-col th-col-q">
+      <text class="th-name th-name-q">信号质量</text>
+      <text class="th-unit th-unit-q"></text>
+    </view>
+  </view>
+
+  <!-- 🌟 核心修改：使用 scroll-view 替代 view，实现自动滚动到底部 -->
+  <!-- 必须设置固定高度，否则不会产生内部滚动条！scroll-into-view 驱动滚动 -->
+  <scroll-view 
+    class="dt-body" 
+    scroll-y="true" 
+    scroll-into-view="{{scrollIntoId}}"
+    scroll-with-animation="false"
+    style="height: {{historyRows.length > 0 ? (historyRows.length * 44 + 20) : 200}}rpx;"
+    wx:if="{{connected}}"
+  >
+    <!-- 数组索引0=最新数据（JS侧unshift），正序渲染：最新在上→最旧在下 -->
+    <!-- scroll-into-view="row-0" 滚动到最新数据 -->
+    <view class="dt-row" wx:for="{{historyRows}}" wx:for-item="item" wx:for-index="idx" wx:key="idx" id="row-{{idx}}">
+      <view class="td-col td-time-col"><text class="td td-time">{{item.time}}</text></view>
+      <view class="td-col td-rms-col"><text class="td td-rms">{{item.rms}}</text></view>
+      <view class="td-col td-act-col"><text class="td td-act">{{item.act}}</text></view>
+      <view class="td-col td-mdf-col"><text class="td td-mdf">{{item.mdf}}</text></view>
+      <view class="td-col td-fat-col"><text class="td td-fat">{{item.fat}}</text></view>
+      <view class="td-col td-q-col"><text class="td td-q">{{item.q}}</text></view>
+    </view>
+  </scroll-view>
+
+  <!-- 未连接时的占位 -->
+  <view class="dt-body" wx:else>
+    <view class="empty-placeholder">
+      <text class="empty-desc">连接设备后实时显示监测数据</text>
+    </view>
+  </view>
+
+  <!-- 指标说明（统一help格式） -->
+  <view class="help-inline">
+    <view class="help-header">
+      <text class="help-icon">💡</text>
+      <text class="help-title">指标说明</text>
+    </view>
+    <view class="help-steps">
+      <view class="help-step">
+        <text class="step-num">1</text>
+        <text class="step-text"><text class="step-bold">RMS(mV)</text> — 均方根值，反应肌肉收缩时的信号振幅</text>
+      </view>
+      <view class="help-step">
+        <text class="step-num">2</text>
+        <text class="step-text"><text class="step-bold">收缩力度(%)</text> — 归一化肌肉激活程度：(当前RMS-静息RMS)/(最大RMS-静息RMS)×100%，0%=放松，100%=最大收缩</text>
+      </view>
+      <view class="help-step">
+        <text class="step-num">3</text>
+        <text class="step-text"><text class="step-bold">MDF(Hz)</text> — 中值频率，肌肉疲劳时功率谱向低频偏移，MDF随之下降</text>
+      </view>
+      <view class="help-step">
+        <text class="step-num">4</text>
+        <text class="step-text"><text class="step-bold">疲劳度(%)</text> — 基于 MDF 计算：1-(当前MDF/静息MDF)，0%=无疲劳，100%=严重疲劳</text>
+      </view>
+      <view class="help-step">
+        <text class="step-num">5</text>
+        <text class="step-text"><text class="step-bold">信号质量</text> — RMS稳定性+MDF生理范围综合评分(0-100)，数值越高数据越可靠</text>
+      </view>
+    </view>
+  </view>
+</view>
+</view>

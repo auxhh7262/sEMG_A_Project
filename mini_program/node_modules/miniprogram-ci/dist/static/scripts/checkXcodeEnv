@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if !command -v xcodebuild &> /dev/null; then
+    echo "没有安装 Xcode，请安装 Xcode 后重试" >&2
+    exit 1
+fi
+
+if !command -v xcrun actool &> /dev/null; then
+    echo "xcrun actool 不能正常调用，请确认是否安装了 Xcode Command Line Tools" >&2
+    exit 1
+fi
+
+if !command -v codesign &> /dev/null; then
+    echo "codesign 不能正常调用，请确认是否安装了 Xcode Command Line Tools" >&2
+    exit 1
+fi
+
+echo "Xcode 环境检测成功"
