@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "PlatformIO",
+			"task": "Upload and Monitor",
+			"problemMatcher": [
+				"$platformio"
+			],
+			"label": "PlatformIO: Upload and Monitor"
+		},
+		{
+			"label": "sEMG: Upload + Monitor (with Log)",
+			"type": "shell",
+			"windows": {
+				"command": "C:\\Users\\honghuang\\.platformio\\penv\\Scripts\\pio.exe run -t upload -d E:\\Personal\\sEMG\\sEMG_Firmware_V1.4; if ($LASTEXITCODE -eq 0) { python E:\\Personal\\sEMG\\sEMG_Firmware_V1.4\\serial_monitor.py }"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		}
+	]
+}
