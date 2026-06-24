@@ -1,0 +1,41 @@
+# Firmware build artifacts
+firmware/.pio/
+.pio/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Python cache (recursive)
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Dependencies
+node_modules/
+firmware/node_modules/
+mini_program/node_modules/
+mini_program/miniprogram_npm/
+
+# Local (not tracked)
+logs/
+temp/
+scripts/
+Claw/
+.workbuddy/
+skills/
+
+# Docs archive & spec (not tracked)
+docs/archive/
+docs/spec/
+
+# Backup files
+*.bak
+*~
+# WeChat DevTools private config
+project.private.config.json
+
